@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Лаборатория за Иновативни Технологии</title>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    <script src="https://www.gstatic.com/firebasejs/6.3.2/firebase-app.js"></script>
+    <script src="/__/firebase/6.3.1/firebase-app.js"></script>
+    <script src="/__/firebase/6.3.1/firebase-auth.js"></script>
+
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAHpOvRY-zVgErofppN5ZDwrwJJfzdMcVU",
+            authDomain: "greeneye-c6d59.firebaseapp.com",
+            databaseURL: "https://greeneye-c6d59.firebaseio.com",
+            projectId: "greeneye-c6d59",
+            storageBucket: "",
+            messagingSenderId: "716772619405",
+            appId: "1:716772619405:web:8eec174203a191f3"
+        };
+ 
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#config-web-app -->
+
+
+    <style>
+        body {
+            padding: 0px;
+            font-family: 'Open Sans';
+            font-weight: 400;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat';
+            font-weight: 500;
+        }
+
+        .nav {
+            font-family: 'Montserrat';
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        #navbar {
+            transition: 0.4s ease;
+        }
+
+        .navbar-mgn {
+            margin-left: 130px;
+        }
+
+        .navbar-logo {
+            height: 120px;
+            width: auto;
+        }
+
+        @@media (max-width: 1000px) {
+            .navbar-mgn {
+                margin-left: 0px;
+            }
+
+            .navbar-logo {
+                height: 120px;
+                width: auto;
+            }
+
+            .navbar-list {
+                margin-top: 35px;
+            }
+        }
+    </style>
+</head>
+<body id="body" onscroll="scrollFunction()">
+
+    
+
+
+    <script>
+        // When the user scrolls down 80px from the top of the document, resize the navbar's padding and the logo's font size
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (window.outerWidth > 1000) {
+                if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+                    document.getElementById("navbar").style.padding = "10px 10px";
+                    document.getElementById("logoPic").style.height = "75px";
+                    document.getElementById("logo").style.marginTop = "-26px";
+                } else {
+                    document.getElementById("navbar").style.padding = "30px 10px";
+                    document.getElementById("logoPic").style.height = "120px";
+                    document.getElementById("logo").style.marginTop = "-46px";
+                }
+            }
+        }
+    </script>
+
+    <nav class="navbar transparentTop navbar-inverse navbar-fixed-top" style="color:white; padding-left: 15px; padding-right: 15px;" id="navbar">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" id="logo" style="margin-top:-50px; padding-left:0px;"><img src="~/images/Logo-without-text.png" id="logoPic" class="navbar-logo" /></a>
+        <div class="container navbar-mgn">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+            </div>
+            <div class="navbar-collapse collapse navbar-list">
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="Home" asp-action="Data">Data</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="mission">Our Mission</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Projects"> Projects</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="honors">Accomplishments</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="partners">Partners</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Team">About Us</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="contacts" style="border-bottom: none;">Contacts</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <partial name="_CookieConsentPartial" />
+
+    @RenderBody()
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

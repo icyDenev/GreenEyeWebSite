@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "Начало";
+}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    .h1-top
+    {
+        font-size: 4vw;
+    }
+
+    @@media (max-width: 768px)
+    {
+        .h1-top
+        {
+            font-size: 7vw;
+        }
+    }
+</style>
+
+<div class="top-div img-responsive" style="background-color:white; height: auto;">
+    <h1 style="color: green; padding-top: 150px;" class="h1-top">Лаборатория за Иновативни Технологии</h1>
+    <br />
+    
+    <img src="~/images/Logo.png" style="display: inline-table; margin-top: 100px; height: 300px; width:auto;" class="img-responsive" />
+</div>
+
+<div style="border-top: white solid 1px; border-bottom: white solid 1px" >
+    <div style="background-color:#28a428;" class="about-box">
+        <img src="~/images/people.png" class="img-responsive" style="width:100px; height:100px;" />
+        <h2>КОИ СМЕ НИЕ</h2>
+        <p>Ние сме група млади ентусиасти, обичащи програмирането, предприемачеството и природата.</p>
+        <br />
+        <a asp-area="" asp-controller="Home" asp-action="Team">Прочетете още...</a>
+    </div><div style="background-color:#2db92d" class="about-box">
+        <img src="~/images/Projects.png" class="img-responsive" style="width:110px; height:100px;" />
+        <h2>ПРОЕКТИТЕ НИ</h2>
+        <p>Нашите проекти са свързани с измерването на различни характеристики на въздуха от ниската атмосфера.</p>
+        <br />
+        <a asp-area="" asp-controller="Home" asp-action="Projects">Прочетете още...</a>
+    </div><div style="background-color:#32cd29" class="about-box">
+        <img src="~/images/target.png" class="img-responsive" style="width:100px; height:100px;" />
+        <h2>МИСИЯТА НИ</h2>
+        <p>Мисията ни е да се повишим качеството на живот на хората и заедно с това да се грижим за природата.</p>
+        <br/>
+        <a href="#mission">Прочетете още...</a>
+    </div><div style="background-color:#32db32;" class="about-box">
+        <img src="~/images/partners.png" class="img-responsive" style="width:140px; height:100px;" />
+        <h2>ПАРНЬОРИТЕ НИ</h2>
+        <p>Имаме няколко партньорa, които ни помагат да се развиваме.</p>
+        <br />
+        <a href="#partners">Прочетете още...</a>
+    </div>
+</div>
+
+<div style="color:black; background-color: white; height: auto; border-bottom: white solid 1px" id="mission">
+    <div class="container body-content about-box" style="width:100%;display:normal; height: auto;">
+        <h1 class="section-h1-white" style="color: black; text-align:center; margin: 40px;">Мисията ни</h1>
+    </div>
+    <div class="container body-content top-div" style="padding-top: 40px; height: auto;">
+        <div class="about-box" style="color: black; border: black solid 2px; border-radius: 20px; margin-top: 20px;">
+            <h2>Да опазим природата</h2>
+            <img src="~/images/leaf.png" class="img-responsive" style="width: auto; height:150px; margin-top: 90px;">
+        </div>
+        <div class="about-box" style="color: black; border: black solid 2px; border-radius: 20px; margin-top: 20px;">
+            <h2>Да повишим качеството на живот на хората</h2>
+            <img src="~/images/happyPeople.png" class="img-responsive" style="width: auto; height:150px;  margin-top: 85px;">
+        </div>
+        <div class="about-box" style="color: black; border: black solid 2px; border-radius: 20px; margin-top: 20px;">
+            <h2>Да развием технологиите, обвързани с екологията</h2>
+            <img src="~/images/ecoTech.png" class="img-responsive" style="width: auto; height:150px;  margin-top: 30px;">
+        </div>
+    </div>
+</div>
+
+
+
+<div style="background-color:white; height: auto; border-bottom: white solid 1px" id="honors">
+    <div class="container body-content about-box" style="width:100%;display:normal;color: black; height: auto;">
+        <h1 class="section-h1-white" style="text-align:center;">Успехите ни</h1>
+    </div>
+    <div class="container body-content about-box" style="width:100%;display: normal;color: black;">
+        <div>
+            <h3>Първо място в конкурса "ОТ ВИНТА" - 2018</h3>
+            <img src="~/images/OTVINTA.jpg" class="img-responsive mobile-img-responsive" style="margin:auto; margin-top: 40px; margin-bottom: 30px;">
+        </div>
+        <hr class="hr-1-green"/>
+        <div>
+            <h3 style="margin-top:40px;margin-bottom:40px;color:black;">Участие в Europe Code Week Varna 2018</h3>
+            <img src="~/images/ECW2018.jpg" class="img-responsive mobile-img-responsive" style="margin:auto; margin-top: 40px; margin-bottom: 30px;"/>
+        </div>
+    </div>
+</div>
+
+<div style="background-color:limegreen; height: auto; border-bottom: white solid 1px" id="partners">
+    <div class="container body-content about-box" style="width:100%;display:normal;color: white; height: auto;">
+        <h1 class="section-h1-green" style="text-align:center; color:white;">Партньорите ни</h1>
+    </div>
+    <div class="container body-content about-box" style="width:100%;display: normal;color: white;">
+        <div style="display: inline-block;" class="partners">
+            <img src="~/images/VarnaLab.png" class="img-responsive" style="height:200px;width:auto;margin:auto; margin-top: 40px; margin-bottom: 30px;">
+        </div> <div style="display:inline-block;" class="partners">
+            <img src="~/images/switch.jpg" class="img-responsive" style="height:200px;width:auto;margin:auto; margin-top: 40px; margin-bottom: 30px;" />
+        </div> <div style="display:inline-block" class="partners">
+            <img src="~/images/enlightBG.png" class="img-responsive" style="height:200px;width:auto;margin:auto; margin-top: 40px; margin-bottom: 30px;" />
+        </div><div style="display:inline-block">
+            <img src="~/images/MGLogo.png" class="img-responsive" style="height:200px;width:auto;margin:auto; margin-top: 40px; margin-bottom: 30px;" />
+        </div>
+        <br/>
+        <div style="display: inline-block;" class="partners">
+            <img src="~/images/Greenpeace.jpg" class="img-responsive" style="height:200px;width:auto;margin:auto; margin-top: 40px; margin-bottom: 30px;">
+        </div> <div style="display: inline-block;" class="partners">
+            <img src="~/images/EcoObshtnostBylgaria.png" class="img-responsive" style="height:200px;width:auto;margin:auto; margin-top: 40px; margin-bottom: 30px;">
+        </div> <div style="display: inline-block;" class="partners">
+            <img src="~/images/Bioraznoobrazie.png" class="img-responsive" style="height:200px;width:auto;margin:auto; margin-top: 40px; margin-bottom: 30px;">
+        </div>
+    </div>
+</div>

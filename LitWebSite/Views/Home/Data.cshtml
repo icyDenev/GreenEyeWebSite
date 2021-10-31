@@ -1,0 +1,329 @@
+﻿@model List<LitWebSite.Models.Sensors>
+
+@{
+    ViewData["Title"] = "Данни";
+}
+
+    <head>
+
+        <meta charset='utf-8' />
+
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+        <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.js'></script>
+
+        <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.2/mapbox-gl.css' rel='stylesheet' />
+
+        <script src='~/lib/bootstrap/dist/js/turf.min.js'></script>
+
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/js/leaflet/leaflet.css" />
+
+        <script src="~/lib/bootstrap/dist/js/leaflet/leaflet.js"></script>
+
+        <script src="https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js"></script>
+
+        <style>
+
+            html, body, #map {
+                height: 100%;
+                width: 100%;
+                padding: 0px;
+                margin: 0px;
+            }
+
+            .info {
+                padding: 6px 8px;
+                font: 14px/16px Arial, Helvetica, sans-serif;
+                background: white;
+                background: rgba(255, 255, 255, 0.8);
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+                border-radius: 5px;
+            }
+
+            .legend {
+                text-align: left;
+                line-height: 18px;
+                color: #555;
+            }
+
+                .legend i {
+                    width: 18px;
+                    height: 18px;
+                    float: left;
+                    margin-right: 8px;
+                    opacity: 0.7;
+                }
+
+                .legend .colorcircle {
+                    border-radius: 50%;
+                    width: 15px;
+                    height: 15px;
+                    margin-top: 0px;
+                }
+        </style>
+        <script>
+            
+        </script>
+
+    </head>
+
+<body>
+    <div id="map" style="margin-top:auto"></div>
+
+    <script>
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //setting up the map//
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        // set center coordinates
+        var centerlat = 43.204666;
+        var centerlon = 27.910543;
+
+        // set default zoom level
+        var zoomLevel = 13;
+
+        // initialize map
+        var map = L.map('map').setView([centerlat, centerlon], zoomLevel);
+
+        // set source for map tiles
+        ATTR = '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
+            '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
+
+        CDB_URL = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+
+        // add tiles to map
+        L.tileLayer(CDB_URL, { attribution: ATTR }).addTo(map);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //generating the GeoJSON objects//
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        //create some GeoJSON points to be sampled (function below)
+        var dotcount = 20000;
+        var dots = make_dots(dotcount);
+
+        //parameters for hex grid
+        var bbox = [27.680881, 43.117984, 28.052775, 43.309206];
+        var cellWidth = 0.4;
+        var units = 'miles';
+
+        //create hex grid and count points within each cell
+        var hexgrid = turf.hexGrid(bbox, cellWidth, units);
+        var hexcounts = turf.count(hexgrid, dots, 'pt_count');
+        L.geoJson(hexcounts, {
+            onEachFeature: onEachHex
+        }).addTo(map);
+
+        function getRandomCoordinates(radius, uniform) {
+            // Generate two random numbers
+            var a = Math.random(),
+                b = Math.random();
+
+            // Flip for more uniformity.
+            if (uniform) {
+                if (b < a) {
+                    var c = b;
+                    b = a;
+                    a = c;
+                }
+            }
+
+            // It's all triangles.
+            return [
+                b * radius * Math.cos(2 * Math.PI * a / b),
+                b * radius * Math.sin(2 * Math.PI * a / b)
+            ];
+        }
+
+        function getRandomLocation(latitude, longitude, radiusInMeters) {
+            var randomCoordinates = getRandomCoordinates(radiusInMeters, true);
+
+            // Earths radius in meters via WGS 84 model.
+            var earth = 6378137;
+
+            // Offsets in meters.
+            var northOffset = randomCoordinates[0],
+                eastOffset = randomCoordinates[1];
+
+            // Offset coordinates in radians.
+            var offsetLatitude = northOffset / earth,
+                offsetLongitude = eastOffset / (earth * Math.cos(Math.PI * (latitude / 180)));
+
+            // Offset position in decimal degrees.
+            return {
+                latitude: latitude + (offsetLatitude * (180 / Math.PI)),
+                longitude: longitude + (offsetLongitude * (180 / Math.PI))
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //legend// 43.204666, 27.910543
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        //create legend
+        var hexlegend = L.control({
+            position: 'bottomright'
+        });
+        //generate legend contents
+        hexlegend.onAdd = function (map) {
+            //set up legend grades and labels
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = ['Very Good', 'Good', 'Moderate', 'Bad', 'Very Bad'],
+                labels = ['<strong>Air Pollution</strong>'],
+                grade;
+
+            //iterate through grades and create a color field and label for each
+            for (var i = 0; i < grades.length; i++) {
+                grade = grades[i];
+                labels.push(
+                    '<i style="background:' + getColor(grade) + '"></i> ' + grade);
+            }
+            div.innerHTML = labels.join('<br>');
+            return div;
+        };
+        hexlegend.addTo(map);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //styling functions//
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        //highlight style
+        var hexStyleHighlight = {
+            color: "#336",
+            weight: 2,
+            opacity: 1,
+        };
+
+        //create color ramp
+        function getColor(y) {
+            return y == undefined ? '#888' :
+                y == "Very Good" ? '#7CFC00' :
+                    y == "Good" ? '#32CD32' :
+                        y == "Moderate" ? '#e5e500' :
+                            y == "Bad" ? '#ff0000' :
+                                y == "Very Bad" ? '#7f0000' :
+                                    '#0c2c84';
+        }
+
+        function getColorByPoints(y) {
+            return y == undefined ? '#888' :
+                y < 5 ? '#7CFC00' :
+                    y < 10 ? '#32CD32' :
+                        y < 15 ? '#e5e500' :
+                            y < 20 ? '#ff0000' :
+                                y < 30 ? '#7f0000' :
+                                    '#0c2c84';
+        }
+
+        function getColorByPointsName(y) {
+            return y == undefined ? "Undefined" :
+                y < 5 ? "Very Good" :
+                    y < 10 ? "Good" :
+                        y < 15 ? "Moderate" :
+                            y < 20 ? "Bad" :
+                                y < 30 ? "Very Bad" :
+                                    '#0c2c84';
+        }
+
+        function style(feature) {
+            return {
+                fillColor: getColorByPoints(feature.properties.pt_count),
+                color: "#888",
+                weight: 0.5,
+                opacity: 1,
+                fillOpacity: 0.2
+            };
+        }
+
+        function highlightHex(e) {
+            var layer = e.target;
+            layer.setStyle(hexStyleHighlight);
+            if (!L.Browser.ie && !L.Browser.opera) {
+                layer.bringToFront();
+            }
+        }
+
+        function resetHexHighlight(e) {
+            var layer = e.target;
+            var hexStyleDefault = style(layer.feature);
+            layer.setStyle(hexStyleDefault);
+        }
+
+        function onEachHex(feature, layer) {
+            layer.on({
+                mouseover: highlightHex,
+                mouseout: resetHexHighlight
+            });
+            var hexStyleDefault = style(layer.feature);
+            layer.setStyle(hexStyleDefault);
+            //debugger;
+            layer.bindPopup('<div><h2>Air Index: <span style="background:' + getColorByPoints(layer.feature.properties.pt_count) + '; color: white; text-align: right; padding: 4px; border-radius: 20px; margin: 5px">' + getColorByPointsName(layer.feature.properties.pt_count) + '</span></h4></div><div><h4>CO2 Level: <span style="background:' + getColorByPoints(layer.feature.properties.pt_count + 5) + '; color: white; padding: 4px; border-radius: 20px; margin: 5px">' + getColorByPointsName(layer.feature.properties.pt_count + 5) + '</span></h4></div><div><h4>CO Level: <span style="background:' + getColorByPoints(layer.feature.properties.pt_count - 2) + '; color: white;padding: 4px; border-radius: 20px; margin: 5px">' + getColorByPointsName(layer.feature.properties.pt_count - 2) + '</span></h4></div><div><h4 style="margin: 5px">O3 Level: <span style="background: ' + getColorByPoints(layer.feature.properties.pt_count + 1) + '; color: white; padding: 4px; border-radius: 20px">' + getColorByPointsName(layer.feature.properties.pt_count + 1) + '</span></h4></div><div><h4>PM 2.5 Level: <span style="background: ' + getColorByPoints(layer.feature.properties.pt_count - 5) + '; color: white;padding: 4px; border-radius: 20px; margin: 5px">' + getColorByPointsName(layer.feature.properties.pt_count - 5) + '</span></h4></div>');
+        }
+
+        //cheapo normrand function
+        function normish(mean, range) {
+            var num_out = ((Math.random() + Math.random() + Math.random() + Math.random() + Math.random() + Math.random() + Math.random() + Math.random() - 4) / 4) * range + mean;
+            return num_out;
+        }
+
+        //create geojson data with random ~normal distribution
+        function make_dots(dotcount) {
+
+            var dots = {
+                type: "FeatureCollection",
+                features: []
+            };
+
+            for (var i = 0; i < dotcount; ++i) {
+
+                //set up random variables
+                /*x = normish(0, 4);
+                y = normish(0, 4);
+            
+                //create points randomly distributed about center coordinates
+                var g = {
+                    "type": "Point",
+                        "coordinates": [((x * 0.11) + centerlon), ((y * 0.1) + centerlat)]
+                };
+            
+                //create feature properties, roughly proportional to distance from center coordinates
+                var p = {
+                    "id": i,
+                        "popup": "Dot_" + i,
+                        "year": parseInt(Math.sqrt(x * x + y * y) * 60 * (1 - Math.random() / 1.5) + 1900),
+                        "size": Math.round((parseFloat(Math.abs((normish(y*y, 2) + normish(x*x, 2)) * 50) + 10)) * 100) / 100
+                };*/
+
+                var loc = getRandomLocation(43.117984, 27.910543, 15000);
+                var t = L.marker([loc.latitude, loc.longitude]);
+
+                dots.features.push(t.toGeoJSON());
+
+                //create features with proper geojson structure        
+                //dots.features.push({
+                //    "geometry" : g,
+                //    "type": "Feature",
+                //    "properties": p
+                //});
+            }
+            return dots;
+        }
+        
+    </script>
+
+    @*@foreach (var hexagon in Model.ToList())
+    {   
+        <script>
+            debugger;
+            bbox = [26, 46, 28, 48];
+
+            var options = { units: 'miles' };
+            var hexgrid = turf.hexGrid(bbox, cellWidth, options);
+
+            var hgrid = JSON.parse(htmlDecode(hexgrid));
+            L.geoJson(hgrid, {onEachFeature: onEachHex}).addTo(map);
+        </script>
+    }*@
+</body>

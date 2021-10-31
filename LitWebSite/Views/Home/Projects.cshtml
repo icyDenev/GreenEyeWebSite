@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Проекти";
+}
+
+@*<style>
+    .wrap {
+        width: 200px;
+        margin: auto;
+        z-index: 1;
+    }
+
+    .msg {
+        color: black;
+        text-align: center;
+        font-family: 'Bree Serif', Courier, monospaced;
+        font-size: 3.5em;
+        width: 200px;
+        position: absolute;
+        margin: 55px 0 0 2px;
+        pointer-events: none;
+    }
+
+    .sticker {
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        background: url(~/images/enlightBG.png) top center no-repeat;
+        animation: spin reverse 15s linear infinite;
+        /*Set our animation play state to paused initially */
+        animation-play-state:running;
+    }
+
+
+    @@keyframes spin {
+        100% {
+            transform: rotate(1turn);
+        }
+    }
+</style>*@
+
+
+
+<div style="color:white; background-color:limegreen; height: auto; border-bottom: white solid 1px" id="projects">
+    <div class="container body-content about-box" style="width:100%;display:normal;color:white;padding-top:130px">
+        <h1 style="text-align:center; margin-top: 150px; font-size: 4vw;" class="section-h1-green">Проекти</h1>
+    </div>
+</div>
+
+<div class="container body-content about-box" style="width:100%;display: normal;color:black;">
+    <h2 style="text-align:center; margin: 50px;">Метеорологичен модул "Зелено Око" и самолет-носач "Sky Observer"</h2>
+    <img src="~/images/GreenEye.png" style="display:block; margin:auto; margin-bottom: 30px;" />
+    <p style="display:block; text-align:center; font-size: 18px; width: 65%; margin: auto; margin-top: 50px; margin-bottom: 50px;">Това е най - новият ни проект, състоящ се от 2 части - метеорологичен модул "Зелено Око" и самолет-носач "Sky Observer". Данните, които замерва са въглероден диоксид, вългероден оксид, фини прахови частици, озон и амоняк.</p>
+
+    <a asp-area="" asp-controller="Home" asp-action="GreenEye" class="about-box" style="height:auto;border: 2px solid black;color: black;">Прочетете още...</a>
+</div>
+
+<hr class="hr-1-white">
+
+<div class="container body-content about-box" style="width:100%;display: normal;color:black;">
+    <h2 style="text-align:center; margin: 50px;">VituSat - 1</h2>
+    <img src="~/images/cansat.png" style="display:block; margin:auto; margin-bottom: 30px;" />
+    <p style="display:block; text-align:center; font-size: 18px; width: 65%; margin: auto; margin-top: 50px; margin-bottom: 50px;">Това е първият ни проект - метеорологчната сонда "VituSat - 1". Беше създаден по формата "CanSat" на ESA. Сензорите и модулите в него са за температура, налягане, ускорение и GPS</p>
+
+    <a asp-area="" asp-controller="Home" asp-action="CanSat" class="about-box" style="height:auto;border: 2px solid black;color: black;">Прочетете още...</a>
+</div>
