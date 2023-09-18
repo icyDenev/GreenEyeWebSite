@@ -1,5 +1,14 @@
 # GreenEyeWebSite
 
+Green Eye is an environmental IoT project, the main aim of which is to monitor the air 
+pollution over cities, towns, and industrial areas and report the critical contaminated 
+zones to the relevant organizations.
+
+The project consists of three parts – a big remotely controlled plane with a 
+meteorological module inside and a web app, where the data, gathered from the 
+module, is visualized on an interactive map. The meteorological module has four
+sensors, which record air polluters - CO2, CO, O3, and PM2.5.
+
 ## 1. Used Technologies
 ### Network:
 - LoRaWaN (The Things Network)
